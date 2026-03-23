@@ -2,12 +2,32 @@
         <nav class="container mx-auto flex justify-between items-center">
             <ul class="flex space-x-4">
                 <li>
-                    <a href="/" class="hover:bg-red-400 py-2 px-4 rounded transition duration-300">
+                    <a href="/" class="<%= currentPage === 'Index' ? 'bg-red-400': 'hover:bg-red-400 %> py-2 px-4 rounded transition duration-300">
                         Go to Home
                     </a>
                 </li>
                 <li>
-                    <a href="/host/add-home" class="hover:bg-red-400 py-2 px-4 rounded transition duration-300">
+                    <a href="/homes" class="<%= currentPage === 'Home' ? 'bg-red-400': 'hover:bg-red-400 %> py-2 px-4 rounded transition duration-300">
+                       homes list
+                    </a>
+                </li>
+                <li>
+                    <a href="/favourites" class="<%= currentPage === 'favourites' ? 'bg-red-400': 'hover:bg-red-400 %> py-2 px-4 rounded transition duration-300">
+                        favourites
+                    </a>
+                </li>
+                <li>
+                    <a href="/booking" class="<%= currentPage === 'Booking' ? 'bg-red-400': 'hover:bg-red-400 %> py-2 px-4 rounded transition duration-300">
+                        Booking
+                    </a>
+                </li>
+                <li>
+                    <a href="/host/host-home-list" class="<%= currentPage === 'host-home' ? 'bg-red-400': 'hover:bg-red-400 %> py-2 px-4 rounded transition duration-300">
+                       host home
+                    </a>
+                </li>
+                <li>
+                    <a href="/host/add-home" class="<%= currentPage === 'addhome' ? 'bg-red-400': 'hover:bg-red-400 %> py-2 px-4 rounded transition duration-300">
                         Add Home
                     </a>
                 </li>

@@ -7,6 +7,16 @@ exports.getaddHome = (req, res, next) => {
   });
 };
 
+exports.getHostHomes = (req, res, next) => {
+  Home.fetchAll((RegisteredHomes) =>
+    res.render("host/host-home-list", {
+      RegisteredHomes: RegisteredHomes,
+      pageTitle: "Host Homes list",
+      CurrentPage: "Host Home",
+    }),
+  );
+};
+
 exports.postaddHome = (req, res, next) => {
   const { houseName, price, location, rating, photoUrl } = req.body;
   const home = new Home(
@@ -21,12 +31,3 @@ exports.postaddHome = (req, res, next) => {
   res.render("host/homeAdded", { pageTitle: "Home added" });
 };
 
-exports.getHomes = (req, res, next) => {
-  Home.fetchAll((RegisteredHomes) =>
-    res.render("store/home-list", {
-      RegisteredHomes: RegisteredHomes,
-      pageTitle: "airbnb Home",
-      CurrentPage: "Home",
-    }),
-  );
-};
