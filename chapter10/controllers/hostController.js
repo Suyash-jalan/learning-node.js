@@ -3,7 +3,7 @@ const Home = require("../models/home");
 exports.getaddHome = (req, res, next) => {
   res.render("host/addHome", {
     pageTitle: "Add Home to airbnb",
-    currentPage: "addHome",
+    currentPage: "add-home",
   });
 };
 
@@ -12,7 +12,7 @@ exports.getHostHomes = (req, res, next) => {
     res.render("host/host-home-list", {
       RegisteredHomes: RegisteredHomes,
       pageTitle: "Host Homes list",
-      CurrentPage: "Host Home",
+      currentPage: "host-home",
     }),
   );
 };
@@ -28,6 +28,9 @@ exports.postaddHome = (req, res, next) => {
   );
   home.save();
 
-  res.render("host/homeAdded", { pageTitle: "Home added" });
+  res.render("host/homeAdded", { 
+    pageTitle: "Home added",
+    currentPage: "add-home" 
+  });
 };
 

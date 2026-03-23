@@ -5,7 +5,7 @@ exports.getIndex = (req, res, next) => {
     res.render("store/home-list", {
       RegisteredHomes: RegisteredHomes,
       pageTitle: "airbnb Home",
-      CurrentPage: "Index",
+      currentPage: "index",
     }),
   );
 };
@@ -15,7 +15,7 @@ exports.getHomes = (req, res, next) => {
     res.render("store/home-list", {
       RegisteredHomes: RegisteredHomes,
       pageTitle: "Homes list",
-      CurrentPage: "Home",
+      currentPage: "home",
     }),
   );
 };
@@ -23,7 +23,7 @@ exports.getHomes = (req, res, next) => {
 exports.getbooking = (req, res, next) => {
     res.render("store/booking", {
       pageTitle: "My Bookings",
-      CurrentPage: "Booking",
+      currentPage: "booking",
     })
 };
 
@@ -32,7 +32,7 @@ exports.getfavouritelist = (req, res, next) => {
     res.render("store/favourite-list", {
       RegisteredHomes: RegisteredHomes,
       pageTitle: "My Favourites",
-      CurrentPage: "Favourites",
+      currentPage: "favourites",
     }),
   );
 };
