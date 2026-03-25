@@ -36,3 +36,23 @@ exports.getfavouritelist = (req, res, next) => {
     }),
   );
 };
+
+exports.getHomeDetails = (req, res, next) => {
+  // Use the exact name defined in your router (e.g., 'homeId')
+  const homeId = req.params.homeId; 
+  
+  console.log("ID from URL:", homeId); // Debug: Ensure this isn't undefined
+
+  Home.findById(homeId, home => {
+    if (!home) {
+      console.log("home not found");
+      return res.redirect("/homes");
+    }
+    res.render("store/home-detail", {
+      home: home,
+      pageTitle: "Home Detail",
+      path: "/homes",
+    });
+  });
+};
+

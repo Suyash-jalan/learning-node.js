@@ -2,6 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const rootDir = require('../utils/pathUtils');
 
+const homeDataPath =path.join( rootDir,'data', 'homes.json');
+
 
 module.exports = class Home{
     constructor(houseName, price, location, rating, photoUrl){
@@ -13,9 +15,10 @@ module.exports = class Home{
     }
 
     save(){
+        this.id = Math.random().toString();
         Home.fetchAll((RegisteredHomes)=>{
         RegisteredHomes.push(this);
-        const homeDataPath =path.join( rootDir,'data', 'homes.json');
+        
         fs.writeFile(homeDataPath, JSON.stringify(RegisteredHomes), error =>{
             console.log("file writting concluded", error);
         });
@@ -35,4 +38,16 @@ module.exports = class Home{
         
     }
 
+    static findById(homeId, callback) {
+    this.fetchAll(homes => {
+        // Add this log to see what is being compared
+        console.log("Searching for ID:", homeId, "Type:", typeof homeId);
+        console.log("First home in file:", homes[0]?.id, "Type:", typeof homes[0]?.id);
+
+        const homeFound = homes.find(home => home.id === homeId);
+        callback(homeFound);
+    });
 }
+
+}
+
