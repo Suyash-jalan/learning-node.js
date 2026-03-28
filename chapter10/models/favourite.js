@@ -2,28 +2,32 @@ const fs = require('fs');
 const path = require('path');
 const rootDir = require('../utils/pathUtils');
 
-const favouriteDataPath =path.join( rootDir,'data', 'homes.json');
+const favouriteDataPath = path.join(rootDir, 'data', 'favourite.json');
 
+module.exports = class Favourite {
+  static addtofavourite(homeId, callback) {
+    Favourite.getFavourite((favourites) => {
+      if (favourites.includes(homeId)) {
+        callback("Home is already marked favourites");
+      } else {
+        favourites.push(homeId);
+        fs.writeFile(favouriteDataPath, JSON.stringify(favourites), callback);
+      }
+    });
+  }
 
-module.exports = class favourite{
-    static addtofavourite(homeid,callback){
-        favourite.getFavourite((favourite)=>{
-                if(favourite.includes(homeid)){
-                    callback("Home is already marked favourites");
-                }else{
-                    favourite.push(homeId);
-                    fs.writeFile(favouriteDataPath, JSON.stringify(favourite), callback);
-                }                
-                });
-
-    }
-
-    static egtfavourites(callback){
-         fs.readFile(homeDataPath, (err, data) => {
-            callback(!err ? JSON.parse(data) : {});
-                  
-                });
-    }
-
-}
+  static getFavourite(callback) {
+    fs.readFile(favouriteDataPath, (err, data) => {
+      if (err) {
+        callback([]);
+      } else {
+        try {
+          callback(JSON.parse(data));
+        } catch (parseErr) {
+          callback([]);
+        }
+      }
+    });
+  }
+};
 
