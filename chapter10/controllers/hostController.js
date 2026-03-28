@@ -25,6 +25,7 @@ exports.postaddHome = (req, res, next) => {
     req.body.location,
     req.body.rating,
     req.body.photoUrl,
+    req.body.description,
   );
   home.save();
 

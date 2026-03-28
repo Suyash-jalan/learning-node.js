@@ -6,12 +6,13 @@ const homeDataPath =path.join( rootDir,'data', 'homes.json');
 
 
 module.exports = class Home{
-    constructor(houseName, price, location, rating, photoUrl){
+    constructor(houseName, price, location, rating, photoUrl, description){
         this.houseName = houseName;
         this.price = price;
         this.location = location;
         this.rating = rating;
         this.photoUrl = photoUrl;
+        this.description = description;
     }
 
     save(){
@@ -28,11 +29,7 @@ module.exports = class Home{
     static fetchAll(callback) {
         const homeDataPath =path.join( rootDir,'data', 'homes.json');
         fs.readFile(homeDataPath, (err, data) => {
-            
-
-            if(!err){
-                callback(JSON.parse(data));
-            }else{callback([]);}
+            callback(!err ? JSON.parse(data): []);
           
         });
         
