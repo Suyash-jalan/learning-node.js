@@ -42,13 +42,24 @@ exports.getfavouritelist = (req, res, next) => {
 };
 
 exports.postAddFavourite = (req, res, next) => {
-  console.log("came to add to favourite", req.body);
+ 
   Favourite.addtofavourite(req.body.homeId, error => {
     if (error) {
       console.log("error while marking favourite", error);
     }
     res.redirect("/favourites");
   });
+};
+
+exports.postRemoveFromFavourite = (req, res, next) => {
+  const homeId = req.params.homeId;
+  Favourite.DeleteById(homeId, error => {
+   if(error){
+    console.log("error while removing from favourites", error);
+   }
+   res.redirect("/favourites");
+  })
+  
 };
 
 

@@ -36,6 +36,9 @@
                   </span>
                 </div>
               </div>
+              <form action="/favourites/delete/<%= home.id %>" method="POST">
+                <button class="bg-green-300 p-2 rounded" type="submit">Remove from favourite</button>
+              </form>
             </div>
           </div>
         </li>
@@ -49,4 +52,4 @@
   </main>
 </body>
 
-</html>
+</html>

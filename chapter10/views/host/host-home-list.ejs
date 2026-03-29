@@ -40,8 +40,11 @@
                                             </span>
                                         </div>
                                     </div>
-                                    <button class="bg-green-300 p-2">Edit</button>
-                                    <button class="bg-red-300 p-2">Delete</button>
+                                    <a href="/host/edit-home/<%=home.id%>?editing=true" class="bg-green-300 p-2">Edit</a>
+                                    <form action="/host/delete-home/<%= home.id %>" method="POST">
+                                        <button type="submit" class="bg-red-300 p-2">Delete</button>
+                                    </form>
+                                    
                                 </div>
                             </div>
                         </li>

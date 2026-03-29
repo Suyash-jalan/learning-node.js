@@ -6,13 +6,22 @@ const storerouter = require("./routes/storerouter");
 const hostRouter = require("./routes/hostRouter");
 const rootDir = require("./utils/pathUtils");
 
+const db = require("./utils/databaseUtil");
+
+db.execute('SELECT * FROM homes').then(result =>{
+    console.log('Getting from db', result);
+})
+.catch(error =>{
+    console.log('Error while reading home records', error);
+})
+
 const app = express();
 
 app.set('view engine', 'ejs');
 app.set('views',path.join(__dirname, 'views') );
 
 
-app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: false }));
 
 
 app.use(storerouter);
