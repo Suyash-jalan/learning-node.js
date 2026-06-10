@@ -28,13 +28,13 @@ exports.getEditHome = (req, res, next) => {
 };
 
 exports.getHostHomes = (req, res, next) => {
-  Home.fetchAll((RegisteredHomes) =>
+  Home.fetchAll().then(([RegisteredHomes]) => {
     res.render("host/host-home-list", {
       RegisteredHomes: RegisteredHomes,
       pageTitle: "Host Homes list",
       currentPage: "host-home",
-    }),
-  );
+    })
+});
 };
 
 exports.postaddHome = (req, res, next) => {

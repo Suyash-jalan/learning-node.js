@@ -8,12 +8,7 @@ const rootDir = require("./utils/pathUtils");
 
 const db = require("./utils/databaseUtil");
 
-db.execute('SELECT * FROM homes').then(result =>{
-    console.log('Getting from db', result);
-})
-.catch(error =>{
-    console.log('Error while reading home records', error);
-})
+
 
 const app = express();
 
@@ -31,7 +26,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 const errorsController = require("./controllers/errors.js");
 app.use(errorsController.pageNotFound);
 
-const port = 3000;
+const port = 3001;
 app.listen(port, () => {
     console.log(`Server is running on address http://localhost:${port}`);
 });
