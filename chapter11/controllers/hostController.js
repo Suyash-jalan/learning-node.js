@@ -91,7 +91,7 @@ exports.postEditHome = (req, res, next) => {
     if(req.file){
       fs.unlink(home.photo, (err) => {
           if (err) {
-            console.log("Error while deleting file ", err);
+            console.log("Error occur when you delete file is ", err);
           }
       });
       home.photo = req.file.path;
