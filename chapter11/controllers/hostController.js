@@ -1,4 +1,5 @@
 const Home = require("../models/home");
+const fs = require("fs");
 
 exports.getaddHome = (req, res, next) => {
   res.render("host/edit-home", {
@@ -44,13 +45,22 @@ exports.getHostHomes = (req, res, next) => {
 };
 
 exports.postaddHome = (req, res, next) => {
-  const { houseName, price, location, rating, photoUrl, description } = req.body;
+  const { houseName, price, location, rating, description } = req.body;
+  console.log(houseName, price, location, rating, description);
+  console.log(req.file);
+
+  if(!req.file){
+    return res.status(422).send("No image provided");
+  }
+
+  const photo = req.file.path;
+
   const home = new Home(
     {houseName,
     price,
     location,
     rating,
-    photoUrl,
+    photo,
     description}
   );
   home.save().then(() =>{
@@ -64,7 +74,8 @@ exports.postaddHome = (req, res, next) => {
 };
 
 exports.postEditHome = (req, res, next) => {
-  const { id, houseName, price, location, rating, photoUrl, description } = req.body;
+  const { id, houseName, price, location, rating, description } = req.body;
+  
   Home.findById(id).then((home) => {
     if (!home) {
       console.log("Home not found for updating");
@@ -74,8 +85,19 @@ exports.postEditHome = (req, res, next) => {
     home.price = price;
     home.location = location;
     home.rating = rating;
-    home.photoUrl = photoUrl;
+    
     home.description = description;
+   
+    if(req.file){
+      fs.unlink(home.photo, (err) => {
+          if (err) {
+            console.log("Error while deleting file ", err);
+          }
+      });
+      home.photo = req.file.path;
+    }
+
+
     return home.save();
   }).then((result) => {
     console.log("Home update", result);

@@ -1,63 +1,103 @@
-<%- include('../partials/head.ejs', { pageTitle: 'Registered Homes' }) %>
-    </head>
+<%- include('../partials/head.ejs', { pageTitle: 'Host Homes List' }) %>
+</head>
 
-    <body>
-        <%- include('../partials/nav.ejs') %>
+<body class="bg-gray-50/50 min-h-screen flex flex-col">
+    <%- include('../partials/nav.ejs') %>
 
-            <!-- Main Content Section -->
-            <main class="container mx-auto bg-white shadow-lg rounded-lg p-8 mt-10 max-w-2xl">
-                <h2 class="text-4xl text-gray-800 font-bold text-center mb-8 border-b pb-4">
-                    Hey host here are your list
-                </h2>
+    <!-- Main Content Section -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1 w-full">
+        
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+            <div>
+                <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">Your Listings</h1>
+                <p class="text-sm text-gray-500 mt-1">Manage, update, and review the properties you have registered on AirBnB.</p>
+            </div>
+            <a href="/host/add-home" class="inline-flex items-center justify-center bg-gradient-to-r from-rose-500 to-rose-600 text-white font-semibold text-xs px-5 py-2.5 rounded-xl shadow-xs hover:shadow-sm hover:from-rose-600 hover:to-rose-700 active:scale-[0.98] transition-all self-start cursor-pointer">
+                Create new listing
+            </a>
+        </div>
 
-                <ul class="space-y-4">
-                    <% RegisteredHomes.forEach(home=> { %>
-                        <li
-                            class="flex items-center justify-between p-4 bg-gray-50 border border-gray-200 rounded-xl hover:shadow-md hover:border-red-400 transition-all duration-300 group">
-                            <div class="flex items-center space-x-4">
-                                <div class="bg-red-100 text-red-500 p-3 rounded-full group-hover:bg-red-500 group-hover:text-white transition-colors">
-                                    <i class="fas fa-home"></i>
-                                </div>
-                                <div class="p-4">
-                                    <h3 class="text-xl font-semibold text-gray-800 mb-2">
-                                        <%= home.houseName %>
-                                    </h3>
-                                    <p class="text-gray-600 mb-2"><i class="fas fa-map-marker-alt mr-2"></i>
-                                        <%= home.location %>
-                                    </p>
-                                    <div class="flex justify-between items-center mb-2">
-                                        <span class="text-lg font-bold text-red-500">Rs<%= home.price %> /
-                                                night</span>
-                                        <div class="flex items-center">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                                fill="currentColor" class="w-5 h-5 text-yellow-400 mr-1">
-                                                <path fill-rule="evenodd"
-                                                    d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z"
-                                                    clip-rule="evenodd" />
-                                            </svg>
-                                            <span class="text-gray-700">
-                                                <%= home.rating %>
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <a href="/host/edit-home/<%=home.id%>?editing=true" class="bg-green-300 p-2">Edit</a>
-                                    <form action="/host/delete-home/<%= home.id %>" method="POST">
-                                        <button type="submit" class="bg-red-300 p-2">Delete</button>
-                                    </form>
-                                    
+        <!-- Listings Grid -->
+        <% if (RegisteredHomes.length > 0) { %>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <% RegisteredHomes.forEach(home => { %>
+                    <div class="group relative flex flex-col bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-300">
+                        
+                        <!-- Image Container -->
+                        <div class="relative aspect-[4/3] w-full overflow-hidden bg-gray-50">
+                            <img src="<%= home.photo || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&q=80' %>" 
+                                 alt="<%= home.houseName %>" 
+                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                                 onerror="this.src='https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&q=80'">
+                            
+                            <!-- Rating Tag -->
+                            <div class="absolute bottom-3 left-3 px-2 py-1 bg-white/90 backdrop-blur-xs rounded-lg text-xs font-semibold text-gray-900 shadow-sm flex items-center gap-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3.5 h-3.5 text-amber-500">
+                                    <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clip-rule="evenodd" />
+                                </svg>
+                                <span><%= home.rating.toFixed(1) %></span>
+                            </div>
+                        </div>
+
+                        <!-- Card Content -->
+                        <div class="p-4 flex-1 flex flex-col justify-between">
+                            <div>
+                                <h3 class="font-bold text-gray-800 line-clamp-1 group-hover:text-rose-500 transition-colors mb-1" title="<%= home.houseName %>">
+                                    <%= home.houseName %>
+                                </h3>
+                                
+                                <p class="text-xs text-gray-500 flex items-center gap-1 mb-2">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
+                                        <circle cx="12" cy="10" r="3"/>
+                                    </svg>
+                                    <%= home.location %>
+                                </p>
+
+                                <div class="text-xs text-gray-900 mb-4">
+                                    <span class="font-extrabold">Rs <%= home.price %></span>
+                                    <span class="text-gray-500 font-medium">/ night</span>
                                 </div>
                             </div>
-                        </li>
-                        <% }) %>
-                </ul>
 
-                <!-- Empty State (Optional) -->
-                <% if (RegisteredHomes.length===0) { %>
-                    <p class="text-center text-gray-500 mt-4">No homes registered yet.</p>
-                    <% } %>
-            </main>
+                            <!-- Actions Row -->
+                            <div class="flex items-center gap-2 border-t border-gray-50 pt-3.5 mt-auto">
+                                <a href="/host/edit-home/<%= home.id %>?editing=true" 
+                                   class="flex-1 text-center text-xs font-semibold text-gray-700 hover:text-gray-900 border border-gray-200 hover:border-gray-350 hover:bg-gray-50 py-2.5 rounded-xl transition-all duration-200 cursor-pointer">
+                                    Edit
+                                </a>
+                                
+                                <form action="/host/delete-home/<%= home.id %>" method="POST" class="flex-1 m-0">
+                                    <button type="submit" 
+                                            class="w-full text-center text-xs font-semibold text-rose-600 hover:text-white border border-rose-100 hover:border-rose-500 hover:bg-rose-500 py-2.5 rounded-xl transition-all duration-200 cursor-pointer"
+                                            onclick="return confirm('Are you sure you want to delete this listing?')">
+                                        Delete
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
 
-
-    </body>
-
-    </html>
+                    </div>
+                <% }) %>
+            </div>
+        <% } else { %>
+            <!-- Empty State -->
+            <div class="text-center py-16 px-4 bg-white border border-gray-150 rounded-2xl shadow-xs max-w-md mx-auto mt-10">
+                <div class="w-16 h-16 bg-rose-50 rounded-full flex items-center justify-center mx-auto text-rose-500 mb-4">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="8" x2="12" y2="16"/>
+                        <line x1="8" y1="12" x2="16" y2="12"/>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-bold text-gray-800 mb-1">No active listings</h3>
+                <p class="text-sm text-gray-500 mb-6">You haven't added any homes for rent yet.</p>
+                <a href="/host/add-home" class="inline-flex items-center justify-center bg-rose-500 hover:bg-rose-600 text-white font-semibold text-xs px-5 py-2.5 rounded-xl transition-colors">
+                    Add a home stay
+                </a>
+            </div>
+        <% } %>
+    </main>
+</body>
+</html>

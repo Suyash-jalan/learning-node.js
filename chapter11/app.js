@@ -3,6 +3,7 @@ const path = require('path');
 const express = require('express');
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
+const multer = require('multer');
 
 const DB_PATH = "mongodb+srv://suyash:ssjy2311@cluster0.z7jqy5q.mongodb.net/airbnb?appName=Cluster0";
 
@@ -26,8 +27,46 @@ store.on('error', function(error) {
     console.log('Session Store Error:', error);
 });
 
+const randomString = (length) => {
+  const characters = 'abcdefghijklmnopqrstuvwxyz';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return result;
+}
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/");
+  },
+  filename: (req, file, cb) => {
+    cb(null, randomString(10) + '-' + file.originalname);
+  }
+});
+
+
+const fileFilter = (req, file, cb) => {
+  if (file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg') {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+}
+const multerOptions = {
+    storage, fileFilter
+};
+
 
 app.use(express.urlencoded({ extended: false }));
+app.use(multer(multerOptions).single('photo'));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use("/uploads", express.static(path.join(__dirname, 'uploads')));
+app.use("/host/uploads", express.static(path.join(__dirname, 'uploads')))
+app.use("/homes/uploads", express.static(path.join(__dirname, 'uploads')))
+
+
+
 
 app.use(session({
     secret: "suyash jalan",
@@ -37,12 +76,24 @@ app.use(session({
 }));
 
 
-app.use(express.static(path.join(__dirname, 'public')));
 app.use((req, res, next) => {
+    console.log(`[${req.method}] ${req.url} - Cookies in Header:`, req.headers.cookie);
     req.isLoggedIn = req.session.isLoggedIn;
+    console.log(`[${req.method}] ${req.url} - Session ID: ${req.sessionID} - isLoggedIn: ${req.session.isLoggedIn}`);
     next();
-})
-app.use(authrouter)
+});
+
+const requireLogin = (req, res, next) => {
+    if (req.isLoggedIn) {
+        next();
+    } else {
+        res.redirect("/login");
+    }
+};
+
+app.use(authrouter);
+app.use("/favourites", requireLogin);
+app.use("/bookings", requireLogin);
 app.use(storerouter);
 app.use("/host", (req, res, next) => {
     if(req.isLoggedIn){

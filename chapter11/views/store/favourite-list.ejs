@@ -1,55 +1,113 @@
-<%- include('../partials/head.ejs', { pageTitle: 'Registered Homes' }) %>
+<%- include('../partials/head.ejs', { pageTitle: 'My Favourites' }) %>
 </head>
 
-<body>
+<body class="bg-gray-50/50 min-h-screen flex flex-col">
   <%- include('../partials/nav.ejs') %>
 
   <!-- Main Content Section -->
-  <main class="container mx-auto bg-white shadow-lg rounded-lg p-8 mt-10 max-w-2xl">
-    <h2 class="text-4xl text-gray-800 font-bold text-center mb-8 border-b pb-4">
-      here are your favourites:
-    </h2>
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1 w-full">
+    
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+      <div>
+        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">Your Favourites</h1>
+        <p class="text-sm text-gray-500 mt-1">Keep track of places you'd love to visit.</p>
+      </div>
+      <% if (favouriteHomes.length > 0) { %>
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-gray-200 rounded-full text-xs font-medium text-gray-655 shadow-xs self-start">
+          <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+          <%= favouriteHomes.length %> saved places
+        </div>
+      <% } %>
+    </div>
 
-    <ul class="space-y-4">
-      <% favouriteHomes.forEach(home => { %>
-        <li class="flex items-center justify-between p-4 bg-gray-50 border border-gray-200 rounded-xl hover:shadow-md hover:border-red-400 transition-all duration-300 group">
-          <div class="flex items-center space-x-4">
-            <!-- Home Icon/Placeholder -->
-            <div class="bg-red-100 text-red-500 p-3 rounded-full group-hover:bg-red-500 group-hover:text-white transition-colors">
-              <i class="fas fa-home"></i>
-            </div>
-            <div class="p-4">
-              <h3 class="text-xl font-semibold text-gray-800 mb-2">
-                <%= home.houseName %>
-              </h3>
-              <p class="text-gray-600 mb-2"><i class="fas fa-map-marker-alt mr-2"></i>
-                <%= home.location %>
-              </p>
-              <div class="flex justify-between items-center mb-2">
-                <span class="text-lg font-bold text-red-500">Rs<%= home.price %> / night</span>
-                <div class="flex items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-yellow-400 mr-1">
-                    <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clip-rule="evenodd" />
-                  </svg>
-                  <span class="text-gray-700">
-                    <%= home.rating %>
-                  </span>
-                </div>
+    <!-- Grid of Favourites -->
+    <% if (favouriteHomes.length > 0) { %>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <% favouriteHomes.forEach(home => { %>
+          <div class="group relative flex flex-col bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-300">
+            
+            <!-- Image Container -->
+            <div class="relative aspect-[4/3] w-full overflow-hidden bg-gray-50">
+              <img src="<%= home.photo || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&q=80' %>" 
+                   alt="<%= home.houseName %>" 
+                   class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                   onerror="this.src='https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&q=80'">
+              
+              <!-- Floating filled heart button to remove -->
+              <div class="absolute top-3 right-3 z-10">
+                <form action="/favourites/delete/<%= home.id %>" method="POST" class="m-0">
+                  <button type="submit" class="w-9 h-9 flex items-center justify-center rounded-full bg-white/90 backdrop-blur-sm border border-gray-100 text-rose-500 hover:scale-105 active:scale-95 shadow-sm transition-all duration-200 cursor-pointer" title="Remove from Favourites">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="w-5 h-5">
+                      <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
+                    </svg>
+                  </button>
+                </form>
               </div>
-              <form action="/favourites/delete/<%= home.id %>" method="POST">
-                <button class="bg-green-300 p-2 rounded" type="submit">Remove from favourite</button>
-              </form>
-            </div>
-          </div>
-        </li>
-      <% }) %>
-    </ul>
 
-    <!-- Empty State (Optional) -->
-    <% if (favouriteHomes.length === 0) { %>
-      <p class="text-center text-gray-500 mt-4">No homes registered yet.</p>
+              <!-- Rating Tag -->
+              <div class="absolute bottom-3 left-3 px-2 py-1 bg-white/90 backdrop-blur-xs rounded-lg text-xs font-semibold text-gray-900 shadow-sm flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3.5 h-3.5 text-amber-500">
+                  <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clip-rule="evenodd" />
+                </svg>
+                <span><%= home.rating.toFixed(1) %></span>
+              </div>
+            </div>
+
+            <!-- Card Content -->
+            <div class="p-4 flex-1 flex flex-col justify-between">
+              <div>
+                <h3 class="font-bold text-gray-800 line-clamp-1 group-hover:text-rose-500 transition-colors mb-1" title="<%= home.houseName %>">
+                  <%= home.houseName %>
+                </h3>
+                
+                <p class="text-xs text-gray-500 flex items-center gap-1 mb-3">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
+                    <circle cx="12" cy="10" r="3"/>
+                  </svg>
+                  <%= home.location %>
+                </p>
+
+                <% if (home.description) { %>
+                  <p class="text-xs text-gray-500 line-clamp-2 mb-4 leading-relaxed">
+                    <%= home.description %>
+                  </p>
+                <% } %>
+              </div>
+
+              <div class="flex items-center justify-between border-t border-gray-50 pt-3.5 mt-auto">
+                <div class="text-sm">
+                  <span class="font-extrabold text-gray-900">Rs <%= home.price %></span>
+                  <span class="text-gray-500 text-xs">/ night</span>
+                </div>
+                <a href="/homes/<%= home.id %>" 
+                   class="text-xs font-semibold text-rose-500 hover:text-white border border-rose-500/25 hover:border-rose-500 hover:bg-rose-500 px-3.5 py-2 rounded-xl transition-all duration-200 cursor-pointer">
+                  View Details
+                </a>
+              </div>
+            </div>
+
+          </div>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <!-- Empty State -->
+      <div class="text-center py-16 px-4 bg-white border border-gray-150 rounded-2xl shadow-xs max-w-md mx-auto mt-10">
+        <div class="w-16 h-16 bg-rose-50 rounded-full flex items-center justify-center mx-auto text-rose-500 mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-7 h-7">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
+          </svg>
+        </div>
+        <h3 class="text-lg font-bold text-gray-800 mb-1">No saved stays</h3>
+        <p class="text-sm text-gray-500 mb-6">Explore stays and tap the heart icon to save places here.</p>
+        <a href="/homes" class="inline-flex items-center justify-center bg-rose-500 hover:bg-rose-600 text-white font-semibold text-xs px-5 py-2.5 rounded-xl transition-colors">
+          Explore stays
+        </a>
+      </div>
     <% } %>
   </main>
 </body>
 
 </html>
+

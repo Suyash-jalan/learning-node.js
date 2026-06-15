@@ -142,9 +142,13 @@ exports.postLogin = async (req, res, next) => {
   }
 
   req.session.isLoggedIn = true;
-  req.session.user = user;
-  await req.session.save();
-  res.redirect("/");
+  req.session.user = JSON.parse(JSON.stringify(user));
+  req.session.save((err) => {
+    if (err) {
+      return next(err);
+    }
+    res.redirect("/");
+  });
 };
 
 exports.postLogout = (req, res, next) => {
